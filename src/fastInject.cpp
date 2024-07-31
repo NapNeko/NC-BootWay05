@@ -68,10 +68,11 @@ HANDLE WINAPI MyCreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwS
     {
         UnHookFunction64("Kernel32.dll", "CreateFileW");
         auto ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+        lock.unlock();
         return ret;
     }
     UnHookFunction64("Kernel32.dll", "CreateFileW");
-    if (wcsstr(lpFileName, L"app_launcher\\index.js") && Timer > 2)
+    if (wcsstr(lpFileName, L"app_launcher\\index.js") && Timer > 0)
     {
         // 获取命令行参数
         LPWSTR CommandLine = GetCommandLineW();
