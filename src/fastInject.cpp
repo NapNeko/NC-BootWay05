@@ -37,7 +37,11 @@ extern HANDLE WINAPI MyCreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DW
 bool Init()
 {
     // 获取临时目录"require('./launcher.node').load('external_index', module);"写到文件
-
+    LPWSTR CommandLine = GetCommandLineW();
+    if (wcsstr(CommandLine, L"--enable-logging") == NULL)
+    {
+        return false;
+    }
     GetTempPathW(MAX_PATH, tempPath);
     GetTempPathA(MAX_PATH, tempPathA);
 
@@ -80,7 +84,10 @@ HANDLE WINAPI MyCreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwS
         {
             // 获取环境变量NAPCAT_PATH
             LPWSTR napcatPath = _wgetenv(L"NAPCAT_PATH");
-            lpFileName = napcatPath;
+            if (napcatPath != NULL)
+            {
+                lpFileName = napcatPath;
+            }
         }
     }
     if (wcsstr(lpFileName, L"app_launcher\\index.js") != NULL && Timer == 0)
